@@ -1,2 +1,2 @@
 # AVLTree
-A simple implementation of AVL Tree
+Georgy Adelson-Velsky and Evgenii Landis' tree
