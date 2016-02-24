@@ -8,10 +8,10 @@ node* search(int value, node* root) {
 
     if (value == root->value) {
         return root;
-    } else if (root->left != nullptr && value >= root->value) {
-        search(value, root->left);
-    } else if (root->right != nullptr && value < root->value) {
+    } else if (root->right != nullptr && value >= root->value) {
         search(value, root->right);
+    } else if (root->left != nullptr && value < root->value) {
+        search(value, root->left);
     }
 
     return root;
@@ -19,18 +19,18 @@ node* search(int value, node* root) {
 
 node* major(node* root) {
 
-    if (root->left != nullptr) {
-        major(root->left);
+    if (root->right != nullptr) {
+        return major(root->right);
+    } else {
+        return root;
     }
-
-    return root;
 }
 
 node* minor(node* root) {
 
-    if (root->right != nullptr) {
-        minor(root->right);
+    if (root->left != nullptr) {
+        return minor(root->left);
+    } else {
+        return root;
     }
-
-    return root;
 }

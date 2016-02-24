@@ -15,10 +15,17 @@ void remove(int value, node* root) {
             delete foundedNode;
         } else {
 
-            if (foundedNode->right != nullptr) {
-                aux = minor(root->right);
+            if (root != foundedNode && foundedNode->value >= root->value) {
+                aux = minor(foundedNode);
+            } else if (root != foundedNode && foundedNode->value < root->value){
+                aux = major(foundedNode);
             } else {
-                aux = major(root->left);
+
+                if (foundedNode->right != nullptr) {
+                    aux = minor(foundedNode->right);
+                } else {
+                    aux = major(foundedNode->left);
+                }
             }
 
             foundedNode->value = aux->value;

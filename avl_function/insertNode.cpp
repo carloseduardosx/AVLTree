@@ -1,25 +1,51 @@
 #include "../header/node.h"
 #include "../header/avlFunctions.h"
 
-node* insert(int value, node* root) {
+node *createNodeWithValue(int value) {
 
-    node* toAdd = new node();
+    node *node = new struct node();
 
-    toAdd->value = value;
+    node->value = value;
+
+    return node;
+}
+
+node *insert(int value, node *root) {
 
     if (root == nullptr) {
+
+        node *toAdd = createNodeWithValue(value);
+
         return toAdd;
     }
 
-    node* foundedNode = search(value, root);
+    if (value >= root->value) {
 
-    if (value >= foundedNode->value) {
+        if (root->right == nullptr) {
 
-        toAdd->father = foundedNode;
-        foundedNode->left = toAdd;
-    } else {
+            node *toAdd = createNodeWithValue(value);
 
-        toAdd->father = foundedNode;
-        foundedNode->right = toAdd;
+            toAdd->father = root;
+            root->right = toAdd;
+
+            return toAdd;
+        } else {
+
+            insert(value, root->right);
+        }
+    } else if (value < root->value) {
+
+        if (root->left == nullptr) {
+
+            node *toAdd = createNodeWithValue(value);
+
+            toAdd->father = root;
+            root->left = toAdd;
+
+            return toAdd;
+        } else {
+
+            insert(value, root->left);
+        }
     }
 }
