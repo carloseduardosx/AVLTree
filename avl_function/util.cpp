@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../header/node.h"
+#include "../header/Node.h"
 
 using namespace std;
 
@@ -7,7 +7,7 @@ string lineSeparator = "\n";
 string logSeparator = "---------------------------------------------------------";
 string avlFullName = "Georgy Adelson-Velsky and Evgenii Landis' Tree";
 
-bool isEmpty(node *root) {
+bool isEmpty(Node *root) {
     return root == nullptr;
 }
 

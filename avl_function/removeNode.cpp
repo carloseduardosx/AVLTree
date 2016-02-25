@@ -1,10 +1,9 @@
-#include "../header/node.h"
 #include "../header/avlFunctions.h"
 
-void remove(int value, node* root) {
+void remove(int value, Node *root) {
 
-    node* aux;
-    node* foundedNode = search(value, root);
+    Node *aux;
+    Node *foundedNode = search(value, root);
 
     if (foundedNode == nullptr) {
         return;
@@ -17,7 +16,7 @@ void remove(int value, node* root) {
 
             if (root != foundedNode && foundedNode->value >= root->value) {
                 aux = minor(foundedNode);
-            } else if (root != foundedNode && foundedNode->value < root->value){
+            } else if (root != foundedNode && foundedNode->value < root->value) {
                 aux = major(foundedNode);
             } else {
 

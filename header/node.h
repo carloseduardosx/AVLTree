@@ -1,11 +1,14 @@
 #ifndef AVL_TREE_NODE_H
 #define AVL_TREE_NODE_H
 
-struct node {
+class Node {
+
+public:
+
     int value;
-    node * father;
-    node * right;
-    node * left;
+    Node *father;
+    Node *right;
+    Node *left;
 };
 
 #endif

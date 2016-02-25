@@ -1,4 +1,4 @@
-#include "../header/node.h"
+#include "../header/Node.h"
 
 static int leftHeight = 0;
 static int rightHeight = 0;
@@ -13,13 +13,12 @@ static int rightHeight = 0;
  * Se distância >2 || <-2 e o FB é negativo então faremos rotação esquerda/direita
  */
 
-
 void cleanFields() {
     leftHeight = 0;
     rightHeight = 0;
 }
 
-void rightRotate(node *root) {
+void rightRotate(Node *root) {
 
     root->left->father = root->father;
     root->father = root->left;
@@ -39,7 +38,7 @@ void rightRotate(node *root) {
     }
 }
 
-void leftRotate(node *root) {
+void leftRotate(Node *root) {
 
     root->right->father = root->father;
     root->father = root->right;
@@ -60,19 +59,19 @@ void leftRotate(node *root) {
     }
 }
 
-void rightLeftRotate(node *root) {
+void rightLeftRotate(Node *root) {
 
     rightRotate(root->right);
     leftRotate(root);
 }
 
-void leftRightRotate(node *root) {
+void leftRightRotate(Node *root) {
 
     leftRotate(root->left);
     rightRotate(root);
 }
 
-void checkHeight(node *root) {
+void checkHeight(Node *root) {
 
     if (root != nullptr) {
 
@@ -88,7 +87,7 @@ void checkHeight(node *root) {
     }
 }
 
-void checkBalancing(node *root) {
+void checkBalancing(Node *root) {
 
     checkHeight(root);
 

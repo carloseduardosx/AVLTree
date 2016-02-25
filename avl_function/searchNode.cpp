@@ -1,6 +1,6 @@
-#include "../header/node.h"
+#include "../header/Node.h"
 
-node* search(int value, node* root) {
+Node *search(int value, Node *root) {
 
     if (root == nullptr) {
         return nullptr;
@@ -17,7 +17,7 @@ node* search(int value, node* root) {
     return root;
 }
 
-node* major(node* root) {
+Node *major(Node *root) {
 
     if (root->right != nullptr) {
         return major(root->right);
@@ -26,7 +26,7 @@ node* major(node* root) {
     }
 }
 
-node* minor(node* root) {
+Node *minor(Node *root) {
 
     if (root->left != nullptr) {
         return minor(root->left);

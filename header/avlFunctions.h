@@ -1,22 +1,29 @@
 #ifndef AVL_TREE_AVLFUNCTIONS_H
 #define AVL_TREE_AVLFUNCTIONS_H
 
-#include "node.h"
+#include "Node.h"
 
 // Principal
-node* search(int value, node* root);
-node* minor(node* root);
-node* major(node* root);
-node* insert(int value, node* root);
-void remove(int value, node* root);
+Node *search(int value, Node *root);
+
+Node *minor(Node *root);
+
+Node *major(Node *root);
+
+Node *insert(int value, Node *root);
+
+void remove(int value, Node *root);
 
 // Show Tree
-void preOrder(node *root);
-void inOrder(node *root);
-void postOrder(node *root);
+void preOrder(Node *root);
+
+void inOrder(Node *root);
+
+void postOrder(Node *root);
 
 // Util
 void initialLog();
-bool isEmpty(node *root);
+
+bool isEmpty(Node *root);
 
 #endif

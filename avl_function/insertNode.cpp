@@ -1,20 +1,19 @@
-#include "../header/node.h"
 #include "../header/avlFunctions.h"
 
-node *createNodeWithValue(int value) {
+Node *createNodeWithValue(int value) {
 
-    node *node = new struct node();
+    Node *node = new Node();
 
     node->value = value;
 
     return node;
 }
 
-node *insert(int value, node *root) {
+Node *insert(int value, Node *root) {
 
     if (root == nullptr) {
 
-        node *toAdd = createNodeWithValue(value);
+        Node *toAdd = createNodeWithValue(value);
 
         return toAdd;
     }
@@ -23,7 +22,7 @@ node *insert(int value, node *root) {
 
         if (root->right == nullptr) {
 
-            node *toAdd = createNodeWithValue(value);
+            Node *toAdd = createNodeWithValue(value);
 
             toAdd->father = root;
             root->right = toAdd;
@@ -37,7 +36,7 @@ node *insert(int value, node *root) {
 
         if (root->left == nullptr) {
 
-            node *toAdd = createNodeWithValue(value);
+            Node *toAdd = createNodeWithValue(value);
 
             toAdd->father = root;
             root->left = toAdd;

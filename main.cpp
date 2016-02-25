@@ -1,5 +1,4 @@
 #include <iostream>
-#include "header/node.h"
 #include "header/avlFunctions.h"
 
 using namespace std;
@@ -8,7 +7,7 @@ void showActions();
 
 void executeAction(int optionSelected);
 
-node *root = nullptr;
+Node *root = nullptr;
 
 int main() {
 

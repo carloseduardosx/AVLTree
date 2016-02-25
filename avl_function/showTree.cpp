@@ -1,9 +1,9 @@
 #include <iostream>
-#include "../header/node.h"
+#include "../header/Node.h"
 
 using namespace std;
 
-void preOrder(node *root) {
+void preOrder(Node *root) {
     if (root != nullptr) {
 
         cout << " -> " << root->value;
@@ -13,7 +13,7 @@ void preOrder(node *root) {
     }
 };
 
-void inOrder(node *root) {
+void inOrder(Node *root) {
     if (root != nullptr) {
 
         inOrder(root->left);
@@ -24,7 +24,7 @@ void inOrder(node *root) {
     }
 };
 
-void postOrder(node *root) {
+void postOrder(Node *root) {
     if (root != nullptr) {
 
         postOrder(root->left);
