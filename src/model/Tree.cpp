@@ -90,7 +90,7 @@ Node *Tree::minor(Node *root) {
     }
 }
 
-void Tree::remove(int value) {
+void Tree::remove(int value, bool wasCalledBefore) {
 
     Node *aux;
     Node *foundedNode = search(value, this->root);
@@ -99,7 +99,66 @@ void Tree::remove(int value) {
         return;
     } else {
 
-        if (foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) {
+        if ((foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) || wasCalledBefore) {
+
+            if (foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) {
+
+                if (foundedNode->getFather()->getRight() == foundedNode) {
+                    foundedNode->getFather()->setRight(nullptr);
+                } else {
+                    foundedNode->getFather()->setLeft(nullptr);
+                }
+
+                aux = foundedNode->getFather();
+
+                delete foundedNode;
+
+                recalculateBalanceFactorForAffectedNodes(aux);
+                return;
+            }
+
+            if (wasCalledBefore && foundedNode == this->root) {
+
+                if (foundedNode->getRight() != nullptr) {
+
+                    foundedNode->setValue(foundedNode->getRight()->getValue());
+                    foundedNode->setRight(foundedNode->getRight()->getRight());
+                    foundedNode->setLeft(foundedNode->getRight()->getLeft());
+
+                    aux = minor(foundedNode->getRight());
+
+                    delete foundedNode->getRight();
+
+                    if (aux != nullptr) {
+                        recalculateBalanceFactorForAffectedNodes(aux);
+                    }
+
+                    return;
+                } else {
+
+                    foundedNode->setValue(foundedNode->getLeft()->getValue());
+                    foundedNode->setRight(foundedNode->getLeft()->getRight());
+                    foundedNode->setLeft(foundedNode->getLeft()->getLeft());
+
+                    aux = major(foundedNode->getLeft());
+
+                    delete foundedNode->getLeft();
+
+                    if (aux != nullptr) {
+                        recalculateBalanceFactorForAffectedNodes(aux);
+                    }
+
+                    return;
+                }
+            } else if (wasCalledBefore && foundedNode->getValue() >= this->root->getValue()) {
+
+                foundedNode->getRight()->setFather(foundedNode->getFather());
+                foundedNode->getFather()->setRight(foundedNode->getRight());
+            } else if(wasCalledBefore && foundedNode->getValue() < this->root->getValue()) {
+
+                foundedNode->getLeft()->setFather(foundedNode->getFather());
+                foundedNode->getFather()->setLeft(foundedNode->getLeft());
+            }
 
             aux = foundedNode->getFather();
 
@@ -109,39 +168,25 @@ void Tree::remove(int value) {
         } else {
 
             if (this->root != foundedNode && foundedNode->getValue() >= this->root->getValue()) {
+
                 aux = minor(foundedNode);
-
-                if (aux == foundedNode) {
-                    aux->getRight()->setFather(aux->getFather());
-                    aux->getFather()->setRight(aux->getRight());
-
-                    delete aux;
-                    return;
-                }
             } else if (this->root != foundedNode && foundedNode->getValue() < this->root->getValue()) {
+
                 aux = major(foundedNode);
-
-                if (aux == foundedNode) {
-                    aux->getLeft()->setFather(aux->getFather());
-                    aux->getFather()->setLeft(aux->getLeft());
-
-                    delete aux;
-                    return;
-                }
             } else if (foundedNode == this->root){
-                aux = minor(foundedNode->getRight());
 
-                if (aux == foundedNode) {
-                    aux = major(foundedNode->getLeft());
-                }
+                aux = foundedNode->getRight() != nullptr ? minor(foundedNode->getRight())
+                                                         : major(foundedNode->getLeft());
             } else {
+
                 cout << "should not reach here!" << endl;
                 return;
             }
 
             int auxValue = aux->getValue();
 
-            remove(aux->getValue());
+            remove(aux->getValue(), true);
+
             foundedNode->setValue(auxValue);
         }
     }
@@ -266,9 +311,11 @@ void Tree::recalculateBalanceFactorForAffectedNodes(Node *root) {
         if (aux->getFb() >= 2) {
 
             balance(aux, true);
+            return;
         } else if (aux->getFb() <= -2) {
 
             balance(aux, false);
+            return;
         }
 
         aux = aux->getFather();
@@ -300,6 +347,8 @@ void Tree::balance(Node *root, bool toRight) {
 
         distance > 2 || distance < -2 ? leftRightRotate(aux) : rightRotate(aux);
     }
+
+    recalculateBalanceFactorForAffectedNodes(aux);
 }
 
 int Tree::checkHeight(Node *root) {
@@ -321,6 +370,6 @@ int Tree::max(int a, int b) {
 Tree::~Tree() {
 
     if (this->root != nullptr) {
-        remove(root->getValue());
+        remove(root->getValue(), false);
     }
 }

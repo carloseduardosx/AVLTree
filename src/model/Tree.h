@@ -37,7 +37,7 @@ public:
 
     Node *minor(Node *root);
 
-    void remove(int value);
+    void remove(int value, bool wasCalledBefore);
 
     Node *createNode(int value);
 

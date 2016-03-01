@@ -79,7 +79,7 @@ void executeAction(int optionSelected) {
             cout << "Write value to remove: " << endl;
             cin >> value;
 
-            tree.remove(value);
+            tree.remove(value, false);
             break;
 
         case showTreePreOrder:

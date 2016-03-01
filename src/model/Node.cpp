@@ -54,14 +54,5 @@ void Node::setLeft(Node *left) {
 
 Node::~Node() {
 
-    if (this->father != nullptr) {
-
-        if (this->father->left == this) {
-
-            this->father->left = nullptr;
-        } else {
-
-            this->father->right = nullptr;
-        }
-    }
+    cout << "Node is being deleted" << endl;
 }
