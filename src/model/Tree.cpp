@@ -99,6 +99,15 @@ void Tree::remove(int value, bool wasCalledBefore) {
         return;
     } else {
 
+        if (foundedNode == this->root && foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) {
+
+            delete foundedNode;
+
+            this->root = nullptr;
+
+            return;
+        }
+
         if ((foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) || wasCalledBefore) {
 
             if (foundedNode->getRight() == nullptr && foundedNode->getLeft() == nullptr) {
@@ -178,8 +187,6 @@ void Tree::remove(int value, bool wasCalledBefore) {
                 aux = foundedNode->getRight() != nullptr ? minor(foundedNode->getRight())
                                                          : major(foundedNode->getLeft());
             } else {
-
-                cout << "should not reach here!" << endl;
                 return;
             }
 

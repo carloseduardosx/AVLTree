@@ -53,6 +53,4 @@ void Node::setLeft(Node *left) {
 }
 
 Node::~Node() {
-
-    cout << "Node is being deleted" << endl;
 }
