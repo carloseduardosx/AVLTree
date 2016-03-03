@@ -11,6 +11,7 @@ private:
 
     int fb;
     int value;
+    bool savedToPrint;
     Node *father, *right, *left;
 
 public:
@@ -24,6 +25,10 @@ public:
     int getValue();
 
     void setValue(int value);
+
+    bool getSavedToPrint();
+
+    void setSavedToPrint(bool savedToPrint);
 
     Node *getFather();
 

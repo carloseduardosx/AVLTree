@@ -12,9 +12,11 @@ private:
     int leftIndex = 0;
     int rightIndex = 0;
 
+    string rootSpaces = "";
     string breakLine = "\n";
     string rightBrace = "\\";
     string leftBrace = "/";
+    string defaultSpaces = "   ";
 
     string leftSubTree[100];
     string rightSubTree[100];
@@ -32,6 +34,8 @@ private:
     void buildAndShowSubTrees();
 
     void cleanGraphicData();
+
+    void cleanSavedToPrintFromAllNodes(Node *root);
 
 public:
 

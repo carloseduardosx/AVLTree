@@ -28,6 +28,14 @@ void Node::setValue(int value) {
     this->value = value;
 }
 
+bool Node::getSavedToPrint() {
+    return this->savedToPrint;
+}
+
+void Node::setSavedToPrint(bool savedToPrint) {
+    this->savedToPrint = savedToPrint;
+}
+
 Node *Node::getFather() {
     return this->father;
 }

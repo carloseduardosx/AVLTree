@@ -392,8 +392,22 @@ void Tree::cleanGraphicData() {
     leftIndex = 0;
     rightIndex = 0;
 
+    rootSpaces.clear();
     leftSubTree->clear();
     rightSubTree->clear();
+
+    cleanSavedToPrintFromAllNodes(this->root);
+}
+
+void Tree::cleanSavedToPrintFromAllNodes(Node *root) {
+
+    if (root != nullptr) {
+
+        root->setSavedToPrint(false);
+
+        cleanSavedToPrintFromAllNodes(root->getLeft());
+        cleanSavedToPrintFromAllNodes(root->getRight());
+    }
 }
 
 void Tree::showGraphic() {
@@ -415,17 +429,28 @@ void Tree::buildAndShowSubTrees() {
             break;
         } else if (!leftSubTree[i].empty() && !rightSubTree[i].empty()) {
 
-            cout << leftSubTree[i].append(rightSubTree[i]) << endl;
+            string leftValue = leftSubTree[i].find("-") != string::npos ? "" : leftSubTree[i];
+
+            cout << leftValue
+                    .append(leftSubTree[i + 1].find("-") != string::npos ? "" : leftSubTree[i + 1])
+                    .append(rightSubTree[i].find("-") != string::npos ? "" : rightSubTree[i])
+                    .append(rightSubTree[i + 1].find("-") != string::npos ? "" : rightSubTree[i + 1]) << endl;
+            i++;
         } else {
 
             if (!leftSubTree[i].empty()) {
-                lineNodeValues.append(leftSubTree[i]);
+                lineNodeValues
+                        .append(leftSubTree[i].find("-") != string::npos ? "" : leftSubTree[i])
+                        .append(leftSubTree[i + 1].find("-") != string::npos ? "" : leftSubTree[i + 1]);
             }
 
             if (!rightSubTree[i].empty()) {
-                lineNodeValues.append(rightSubTree[i]);
+                lineNodeValues
+                        .append(rightSubTree[i].find("-") != string::npos ? "" : rightSubTree[i])
+                        .append(rightSubTree[i + 1].find("-") != string::npos ? "" : rightSubTree[i + 1]);
             }
 
+            i++;
             cout << lineNodeValues << endl;
         }
     }
@@ -434,38 +459,107 @@ void Tree::buildAndShowSubTrees() {
 void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace) {
 
     int height = checkHeight(root);
-    int leftNodes = root == nullptr ? 1 : checkNumNodes(root->getLeft());
-    int rightNodes = root == nullptr ? 1 : checkNumNodes(root->getRight());
+    int leftNodes = root == nullptr ? 0 : checkNumNodes(root->getLeft());
+    int rightNodes = root == nullptr ? 0 : checkNumNodes(root->getRight());
 
     if (height > 0 && root != nullptr) {
 
         if (root == this->root) {
 
             string spaces = "";
-            int spacesToShowRoot = height * leftNodes == 0 ? 1 : leftNodes;
+            int spacesToShowRoot = height + leftNodes;
 
             for (int i = 0; i < spacesToShowRoot; i++) {
                 spaces.append(" ");
             }
 
+            string secondLevel = "";
+
             cout << spaces << root->getValue() << endl;
+
+            rootSpaces.append(spaces);
+
+            height = checkHeight(root->getLeft());
+            leftNodes = root->getLeft() == nullptr ? 0 : checkNumNodes(root->getLeft()->getLeft());
+
+            if (root->getLeft() != nullptr) {
+                root->getLeft()->setSavedToPrint(true);
+            }
+
+            spaces = "";
+            spacesToShowRoot = height + leftNodes;
+
+            for (int i = 0; i < spacesToShowRoot; i++) {
+                spaces.append(" ");
+            }
+
+            secondLevel.append(spaces).append(root->getLeft() == nullptr ? "" : to_string(root->getLeft()->getValue()));
+
+            height = checkHeight(root->getRight());
+            leftNodes = root->getRight() == nullptr ? 0 : checkNumNodes(root->getRight()->getLeft());
+            rightNodes = root->getRight() == nullptr ? 0 : checkNumNodes(root->getRight()->getRight());
+
+            if (root->getRight() != nullptr) {
+                root->getRight()->setSavedToPrint(true);
+            }
+
+            spaces = rootSpaces;
+            spacesToShowRoot = height + leftNodes + rightNodes;
+
+            for (int i = 0; i < spacesToShowRoot; i++) {
+                spaces.append(" ");
+            }
+
+            secondLevel.append(spaces).append(root->getRight() == nullptr ? "" : to_string(root->getRight()->getValue()));
+
+            cout << secondLevel << endl;
 
             showRootAndStoreSubTrees(root->getLeft(), false, false);
             showRootAndStoreSubTrees(root->getRight(), true, true);
         } else if (toRight) {
 
             string spaces = "";
-            int spacesToShowRoot = (height * leftNodes == 0 ? 1 : leftNodes)
-                                   + (height * rightNodes == 0 ? 1 : rightNodes);
+            int spacesToShowRoot = height + leftNodes + rightNodes;
 
             for (int i = 0; i < spacesToShowRoot; i++) {
                 spaces.append(" ");
             }
 
-            if (isRightBrace) {
-                rightSubTree[rightIndex++] = spaces.append(to_string(root->getValue()));
-            } else {
-                leftSubTree[leftIndex++] = spaces.append(to_string(root->getValue()));
+            if (isRightBrace && !root->getSavedToPrint()) {
+
+                Node *leftNode = root->getFather()->getLeft();
+                string leftNodeValue = leftNode == nullptr ? "-" : to_string(leftNode->getValue());
+
+                root->setSavedToPrint(true);
+
+                if (leftNode != nullptr) {
+                    leftNode->setSavedToPrint(true);
+                }
+
+                string aux = spaces;
+                string secondSpaces = spaces;
+                string defaultSpaces = this->defaultSpaces;
+                string leftSpaces = rootSpaces.length() > 3 ? rootSpaces.substr(3, rootSpaces.length() - 1) : rootSpaces;
+
+                rightSubTree[rightIndex++] = spaces.append(leftSpaces).append(leftNodeValue);
+                rightSubTree[rightIndex++] = secondSpaces.append(defaultSpaces).append(to_string(root->getValue()));
+
+                rootSpaces.append(aux);
+            } else if (!root->getSavedToPrint()) {
+
+                Node *leftNode = root->getFather()->getLeft();
+                string leftNodeValue = leftNode == nullptr ? "-" : to_string(leftNode->getValue());
+
+                root->setSavedToPrint(true);
+
+                if (leftNode != nullptr) {
+                    leftNode->setSavedToPrint(true);
+                }
+
+                string defaultSpaces = this->defaultSpaces;
+
+                leftSubTree[leftIndex++] = spaces.append(leftNodeValue);
+                leftSubTree[leftIndex++] = defaultSpaces.append(to_string(root->getValue()));
             }
 
             showRootAndStoreSubTrees(root->getLeft(), false, isRightBrace);
@@ -473,16 +567,47 @@ void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace)
         } else {
 
             string spaces = "";
-            int spacesToShowNode = height * leftNodes;
+            int spacesToShowNode = height + leftNodes;
 
             for (int i = 0; i < spacesToShowNode; i++) {
                 spaces.append(" ");
             }
 
-            if (isRightBrace) {
-                rightSubTree[rightIndex++] = spaces.append(to_string(root->getValue()));
-            } else {
+            if (isRightBrace && !root->getSavedToPrint()) {
+
+                Node *rightNode = root->getFather()->getRight();
+                string rightNodeValue = rightNode == nullptr ? "-" : to_string(rightNode->getValue());
+
+                root->setSavedToPrint(true);
+
+                if (rightNode != nullptr) {
+                    rightNode->setSavedToPrint(true);
+                }
+
+                string aux = spaces;
+                string secondSpaces = spaces;
+                string defaultSpaces = this->defaultSpaces;
+                string leftSpaces = rootSpaces.length() > 3 ? rootSpaces.substr(3, rootSpaces.length() - 1) : rootSpaces;
+
+                rightSubTree[rightIndex++] = spaces.append(leftSpaces).append(to_string(root->getValue()));
+                rightSubTree[rightIndex++] = secondSpaces.append(defaultSpaces).append(rightNodeValue);
+
+                rootSpaces.append(aux);
+            } else if (!root->getSavedToPrint()){
+
+                Node *rightNode = root->getFather()->getRight();
+                string rightNodeValue = rightNode == nullptr ? "-" : to_string(rightNode->getValue());
+
+                root->setSavedToPrint(true);
+
+                if (rightNode != nullptr) {
+                    rightNode->setSavedToPrint(true);
+                }
+
+                string defaultSpaces = this->defaultSpaces;
+
                 leftSubTree[leftIndex++] = spaces.append(to_string(root->getValue()));
+                leftSubTree[leftIndex++] = defaultSpaces.append(rightNodeValue);
             }
 
             showRootAndStoreSubTrees(root->getLeft(), false, isRightBrace);
