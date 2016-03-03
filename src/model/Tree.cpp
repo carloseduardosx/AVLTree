@@ -163,7 +163,7 @@ void Tree::remove(int value, bool wasCalledBefore) {
 
                 foundedNode->getRight()->setFather(foundedNode->getFather());
                 foundedNode->getFather()->setRight(foundedNode->getRight());
-            } else if(wasCalledBefore && foundedNode->getValue() < this->root->getValue()) {
+            } else if (wasCalledBefore && foundedNode->getValue() < this->root->getValue()) {
 
                 foundedNode->getLeft()->setFather(foundedNode->getFather());
                 foundedNode->getFather()->setLeft(foundedNode->getLeft());
@@ -182,7 +182,7 @@ void Tree::remove(int value, bool wasCalledBefore) {
             } else if (this->root != foundedNode && foundedNode->getValue() < this->root->getValue()) {
 
                 aux = major(foundedNode);
-            } else if (foundedNode == this->root){
+            } else if (foundedNode == this->root) {
 
                 aux = foundedNode->getRight() != nullptr ? minor(foundedNode->getRight())
                                                          : major(foundedNode->getLeft());
@@ -209,6 +209,7 @@ void Tree::insert(int value, Node *root) {
     if (this->root == nullptr) {
 
         setRoot(createNode(value));
+
         return;
     }
 
@@ -372,6 +373,122 @@ int Tree::checkHeight(Node *root) {
 
 int Tree::max(int a, int b) {
     return a > b ? a : b;
+}
+
+int Tree::checkNumNodes(Node *root) {
+
+    if (root == nullptr) {
+        return 0;
+    }
+
+    int leftNodes = checkNumNodes(root->getLeft());
+    int rightNodes = checkNumNodes(root->getRight());
+
+    return leftNodes + rightNodes + 1;
+}
+
+void Tree::cleanGraphicData() {
+
+    leftIndex = 0;
+    rightIndex = 0;
+
+    leftSubTree->clear();
+    rightSubTree->clear();
+}
+
+void Tree::showGraphic() {
+
+    showRootAndStoreSubTrees(this->root, false, false);
+    buildAndShowSubTrees();
+    cleanGraphicData();
+}
+
+void Tree::buildAndShowSubTrees() {
+
+    string lineNodeValues = "";
+    unsigned long rightSubTreeLength = rightSubTree->length();
+
+    for (int i = 0; i < rightSubTreeLength; i++) {
+
+        if (leftSubTree[i].empty() && rightSubTree[i].empty()) {
+
+            break;
+        } else if (!leftSubTree[i].empty() && !rightSubTree[i].empty()) {
+
+            cout << leftSubTree[i].append(rightSubTree[i]) << endl;
+        } else {
+
+            if (!leftSubTree[i].empty()) {
+                lineNodeValues.append(leftSubTree[i]);
+            }
+
+            if (!rightSubTree[i].empty()) {
+                lineNodeValues.append(rightSubTree[i]);
+            }
+
+            cout << lineNodeValues << endl;
+        }
+    }
+}
+
+void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace) {
+
+    int height = checkHeight(root);
+    int leftNodes = root == nullptr ? 1 : checkNumNodes(root->getLeft());
+    int rightNodes = root == nullptr ? 1 : checkNumNodes(root->getRight());
+
+    if (height > 0 && root != nullptr) {
+
+        if (root == this->root) {
+
+            string spaces = "";
+            int spacesToShowRoot = height * leftNodes == 0 ? 1 : leftNodes;
+
+            for (int i = 0; i < spacesToShowRoot; i++) {
+                spaces.append(" ");
+            }
+
+            cout << spaces << root->getValue() << endl;
+
+            showRootAndStoreSubTrees(root->getLeft(), false, false);
+            showRootAndStoreSubTrees(root->getRight(), true, true);
+        } else if (toRight) {
+
+            string spaces = "";
+            int spacesToShowRoot = (height * leftNodes == 0 ? 1 : leftNodes)
+                                   + (height * rightNodes == 0 ? 1 : rightNodes);
+
+            for (int i = 0; i < spacesToShowRoot; i++) {
+                spaces.append(" ");
+            }
+
+            if (isRightBrace) {
+                rightSubTree[rightIndex++] = spaces.append(to_string(root->getValue()));
+            } else {
+                leftSubTree[leftIndex++] = spaces.append(to_string(root->getValue()));
+            }
+
+            showRootAndStoreSubTrees(root->getLeft(), false, isRightBrace);
+            showRootAndStoreSubTrees(root->getRight(), true, isRightBrace);
+        } else {
+
+            string spaces = "";
+            int spacesToShowNode = height * leftNodes;
+
+            for (int i = 0; i < spacesToShowNode; i++) {
+                spaces.append(" ");
+            }
+
+            if (isRightBrace) {
+                rightSubTree[rightIndex++] = spaces.append(to_string(root->getValue()));
+            } else {
+                leftSubTree[leftIndex++] = spaces.append(to_string(root->getValue()));
+            }
+
+            showRootAndStoreSubTrees(root->getLeft(), false, isRightBrace);
+            showRootAndStoreSubTrees(root->getRight(), true, isRightBrace);
+        }
+    }
 }
 
 Tree::~Tree() {

@@ -14,7 +14,7 @@ void Runner::showActions() {
     cout << "3- Show Tree Pre Order" << endl;
     cout << "4- Show Tree In Order" << endl;
     cout << "5- Show Tree Post Order" << endl;
-    cout << "6- Show Tree Height" << endl;
+    cout << "6- Show Tree" << endl;
     cout << "7- Leave" << endl;
     cout << endl;
     cout << "Choose an option: ";
@@ -31,7 +31,7 @@ void Runner::executeAction(int optionSelected) {
     const int showTreePreOrder = 3;
     const int showTreeInOrder = 4;
     const int showTreePostOrder = 5;
-    const int showTreeHeight = 6;
+    const int showTree = 6;
     const int leaveOption = 7;
 
     int value;
@@ -88,10 +88,10 @@ void Runner::executeAction(int optionSelected) {
 
             break;
 
-        case showTreeHeight:
+        case showTree:
 
-            cout << tree.checkHeight(tree.getRoot()) << endl;
-
+            cleanConsole();
+            tree.showGraphic();
             break;
 
         case leaveOption:

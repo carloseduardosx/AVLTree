@@ -7,21 +7,39 @@ class Tree {
 
 private:
 
-    int rightHeight = 0;
-    int leftHeight = 0;
     Node *root;
 
+    int leftIndex = 0;
+    int rightIndex = 0;
+
+    string breakLine = "\n";
+    string rightBrace = "\\";
+    string leftBrace = "/";
+
+    string leftSubTree[100];
+    string rightSubTree[100];
+
     int max(int a, int b);
+
+    int checkNumNodes(Node *root);
 
     void balance(Node *root, bool toRight);
 
     void recalculateBalanceFactorForAffectedNodes(Node *root);
+
+    void showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace);
+
+    void buildAndShowSubTrees();
+
+    void cleanGraphicData();
 
 public:
 
     Tree();
 
     Node *getRoot();
+
+    void showGraphic();
 
     void setRoot(Node *root);
 
