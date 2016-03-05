@@ -9,6 +9,11 @@ private:
 
     Node *root;
 
+    string node = "  ___\n"
+            " /    \\\n"
+            "(  %i  )\n"
+            " `----'\n";
+
     int leftIndex = 0;
     int rightIndex = 0;
 
@@ -37,15 +42,25 @@ private:
 
     void cleanSavedToPrintFromAllNodes(Node *root);
 
+    bool containsNode(Node *nodes[], int length);
+
 public:
 
     Tree();
 
     Node *getRoot();
 
+    void setRoot(Node *root);
+
     void showGraphic();
 
-    void setRoot(Node *root);
+    /*
+     * Criar função responsável por mostrar toda a árvore
+     *
+     * Tal função devera receber todos os nós do nível corrente
+     * Ela irá printar todos os nós recebidos como argumento e se chamar passando os filhos de cada nó
+     */
+    void showAllTree(int argsSize, Node *root, ...);
 
     void preOrder(Node *root);
 

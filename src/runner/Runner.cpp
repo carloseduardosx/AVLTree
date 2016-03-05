@@ -90,8 +90,10 @@ void Runner::executeAction(int optionSelected) {
 
         case showTree:
 
-            cleanConsole();
-            tree.showGraphic();
+//            cleanConsole();
+//            tree.showGraphic();
+
+            tree.showAllTree(0, tree.getRoot());
             break;
 
         case leaveOption:

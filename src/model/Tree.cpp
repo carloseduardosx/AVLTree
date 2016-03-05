@@ -1,4 +1,6 @@
 #include <iostream>
+#include <math.h>
+#include <cstdarg>
 #include "Tree.h"
 
 using namespace std;
@@ -456,6 +458,67 @@ void Tree::buildAndShowSubTrees() {
     }
 }
 
+bool Tree::containsNode(Node *nodes[], int length) {
+
+    for (int i = 0; i < length; i++) {
+
+        if (nodes[i] != nullptr) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Tree::showAllTree(int argsSize, Node *root, ...) {
+
+    va_list args;
+    va_start(args, root);
+
+    if (root != nullptr) {
+
+        int rootHeight = checkHeight(root);
+
+        for (int i = 0; i < rootHeight; i++) {
+            rootSpaces.append(" ");
+        }
+
+        cout << rootSpaces << root->getValue() << endl;
+
+        showAllTree(2, nullptr, root->getLeft(), root->getRight());
+    } else {
+
+        int nodeCursor = 0;
+        int nodeQuantityByLevel = 2 * argsSize;
+        string valuesByLevel = "";
+        Node *nodes[nodeQuantityByLevel];
+
+        for (int i = 0; i < argsSize; i++) {
+
+            Node *node = va_arg(args, Node*);
+
+            if (node != nullptr && node->getValue() != 0) {
+                valuesByLevel += to_string(node->getValue());
+
+                nodes[nodeCursor++] = node->getLeft();
+                nodes[nodeCursor++] = node->getRight();
+            } else {
+
+                nodes[nodeCursor++] = nullptr;
+                nodes[nodeCursor++] = nullptr;
+            }
+        }
+
+        va_end(args);
+
+        cout << valuesByLevel << endl;
+
+        if (containsNode(nodes, nodeQuantityByLevel)) {
+            showAllTree(nodeQuantityByLevel, nullptr, nodes);
+        }
+    }
+}
+
 void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace) {
 
     int height = checkHeight(root);
@@ -510,7 +573,8 @@ void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace)
                 spaces.append(" ");
             }
 
-            secondLevel.append(spaces).append(root->getRight() == nullptr ? "" : to_string(root->getRight()->getValue()));
+            secondLevel.append(spaces).append(
+                    root->getRight() == nullptr ? "" : to_string(root->getRight()->getValue()));
 
             cout << secondLevel << endl;
 
@@ -526,6 +590,10 @@ void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace)
             }
 
             if (isRightBrace && !root->getSavedToPrint()) {
+
+                long rootHeight = checkHeight(this->root);
+                long actualHeight = checkHeight(root);
+                long double nodeQuantityByHeight = pow(2l, (rootHeight - actualHeight));
 
                 Node *leftNode = root->getFather()->getLeft();
                 string leftNodeValue = leftNode == nullptr ? "-" : to_string(leftNode->getValue());
@@ -587,13 +655,14 @@ void Tree::showRootAndStoreSubTrees(Node *root, bool toRight, bool isRightBrace)
                 string aux = spaces;
                 string secondSpaces = spaces;
                 string defaultSpaces = this->defaultSpaces;
-                string leftSpaces = rootSpaces.length() > 3 ? rootSpaces.substr(3, rootSpaces.length() - 1) : rootSpaces;
+                string leftSpaces =
+                        rootSpaces.length() > 3 ? rootSpaces.substr(3, rootSpaces.length() - 1) : rootSpaces;
 
                 rightSubTree[rightIndex++] = spaces.append(leftSpaces).append(to_string(root->getValue()));
                 rightSubTree[rightIndex++] = secondSpaces.append(defaultSpaces).append(rightNodeValue);
 
                 rootSpaces.append(aux);
-            } else if (!root->getSavedToPrint()){
+            } else if (!root->getSavedToPrint()) {
 
                 Node *rightNode = root->getFather()->getRight();
                 string rightNodeValue = rightNode == nullptr ? "-" : to_string(rightNode->getValue());
