@@ -1,7 +1,7 @@
-#include <iostream>
 #include "Node.h"
 
-using namespace std;
+Node::Node() {
+}
 
 Node::Node(int value, int fb, Node *father, Node *right, Node *left) {
 
@@ -26,14 +26,6 @@ int Node::getValue() {
 
 void Node::setValue(int value) {
     this->value = value;
-}
-
-bool Node::getSavedToPrint() {
-    return this->savedToPrint;
-}
-
-void Node::setSavedToPrint(bool savedToPrint) {
-    this->savedToPrint = savedToPrint;
 }
 
 Node *Node::getFather() {

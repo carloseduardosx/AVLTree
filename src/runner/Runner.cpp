@@ -11,11 +11,12 @@ void Runner::showActions() {
 
     cout << "1- Insert" << endl;
     cout << "2- Remove" << endl;
-    cout << "3- Show Tree Pre Order" << endl;
-    cout << "4- Show Tree In Order" << endl;
-    cout << "5- Show Tree Post Order" << endl;
-    cout << "6- Show Tree" << endl;
-    cout << "7- Leave" << endl;
+    cout << "3- Remove All Nodes" << endl;
+    cout << "4- Show Tree Pre Order" << endl;
+    cout << "5- Show Tree In Order" << endl;
+    cout << "6- Show Tree Post Order" << endl;
+    cout << "7- Show Tree" << endl;
+    cout << "8- Leave" << endl;
     cout << endl;
     cout << "Choose an option: ";
 
@@ -28,11 +29,12 @@ void Runner::executeAction(int optionSelected) {
 
     const int insertOption = 1;
     const int removeOption = 2;
-    const int showTreePreOrder = 3;
-    const int showTreeInOrder = 4;
-    const int showTreePostOrder = 5;
-    const int showTree = 6;
-    const int leaveOption = 7;
+    const int removeAllNodesOption = 3;
+    const int showTreePreOrder = 4;
+    const int showTreeInOrder = 5;
+    const int showTreePostOrder = 6;
+    const int showTree = 7;
+    const int leaveOption = 8;
 
     int value;
 
@@ -56,6 +58,12 @@ void Runner::executeAction(int optionSelected) {
             cin >> value;
 
             tree.remove(value, false);
+            break;
+
+        case removeAllNodesOption:
+
+            cleanConsole();
+            tree.removeAllNodes();
             break;
 
         case showTreePreOrder:
@@ -90,10 +98,8 @@ void Runner::executeAction(int optionSelected) {
 
         case showTree:
 
-//            cleanConsole();
-//            tree.showGraphic();
-
-            tree.showAllTree(0, tree.getRoot());
+            cleanConsole();
+            tree.showAllTree(0, tree.getRoot(), nullptr, nullptr);
             break;
 
         case leaveOption:
