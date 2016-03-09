@@ -100,7 +100,7 @@ void Tree::remove(int value, bool wasCalledBefore) {
 
             delete foundedNode;
 
-            this->root = nullptr;
+            setRoot(nullptr);
 
             return;
         }
@@ -181,8 +181,7 @@ void Tree::remove(int value, bool wasCalledBefore) {
                 aux = major(foundedNode);
             } else if (foundedNode == this->root) {
 
-                aux = foundedNode->getRight() != nullptr ? minor(foundedNode->getRight())
-                                                         : major(foundedNode->getLeft());
+                aux = foundedNode->getRight() != nullptr ? minor(foundedNode->getRight()) : major(foundedNode->getLeft());
             } else {
                 return;
             }
@@ -386,6 +385,10 @@ int Tree::max(int a, int b) {
     return a > b ? a : b;
 }
 
+int Tree::min(int a, int b) {
+    return a < b ? a : b;
+}
+
 int Tree::checkNumNodes(Node *root) {
 
     if (root == nullptr) {
@@ -415,6 +418,7 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
     if (root != nullptr) {
 
         string rootSpaces;
+        string auxSpaces;
         int rootHeight = checkHeight(root);
         int leftNodes = checkNumNodes(root->getLeft());
         int rightNodes = checkNumNodes(root->getRight());
@@ -423,7 +427,20 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
             rootSpaces.append(" ");
         }
 
-        cout << rootSpaces << root->getValue() << endl;
+        if (rootHeight > 2) {
+
+            if ((max(leftNodes, rightNodes) - min(leftNodes, rightNodes) > 0)) {
+                for (int i = 0; i < (max(leftNodes, rightNodes) - min(leftNodes, rightNodes)); i++) {
+                    auxSpaces += " ";
+                }
+            } else {
+                for (int i = 0; i < rootHeight; i++) {
+                    auxSpaces += " ";
+                }
+            }
+        }
+
+        cout << auxSpaces << rootSpaces << root->getValue() << endl;
 
         rootSpaces.resize(rootSpaces.size() - rootHeight + 1);
         this->rootSpaces = rootSpaces;
@@ -448,9 +465,6 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
             Node *node = nodes[i];
 
             int height = checkHeight(node);
-            int myNodes = checkNumNodes(node);
-            int leftNodes = node == nullptr ? 0 : checkNumNodes(node->getLeft());
-            int rightNodes = node == nullptr ? 0 : checkNumNodes(node->getRight());
             int leftNodesFromFather = node == nullptr ? 0 : checkNumNodes(node->getFather()->getLeft());
             int rightNodesFromFather = node == nullptr ? 0 : checkNumNodes(node->getFather()->getRight());
 
@@ -472,7 +486,7 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
                 }
 
                 if (i == midArgsSize) {
-                    valuesByLevel += this->defaultSpaces;
+                    valuesByLevel += this->defaultSpaces + " ";
                 }
 
                 children[nodeCursor++] = node->getLeft();
@@ -489,23 +503,25 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
                     if (lastNodes != nullptr) {
                         Node *lastNode = lastNodes[i];
 
-                        int leftNodesFromGrandFather = lastNode == nullptr ? 1 : checkHeight(lastNode->getLeft());
-                        int rightNodesFromGrandFather = lastNode == nullptr ? 1 : checkHeight(lastNode->getRight());
+                        int heightFromLastNode = lastNode == nullptr ? 1 : checkHeight(lastNode);
+                        int heightFromLeftLastNode = lastNode == nullptr ? 1 : checkHeight(lastNode->getLeft());
+                        int heightFromRightLastNode = lastNode == nullptr ? 1 : checkHeight(lastNode->getRight());
 
-                        if ((leftNodesFromGrandFather + rightNodesFromGrandFather) == 0) {
+                        if (((heightFromLeftLastNode + rightNodesFromFather) - heightFromLastNode) <= 0) {
                             valuesByLevel += defaultSpaces;
                         }
 
-                        for (int j = 0; j < (leftNodesFromGrandFather + rightNodesFromGrandFather); j++) {
+                        for (int j = 0; j < (max(heightFromLeftLastNode, heightFromRightLastNode) +
+                                min(heightFromLeftLastNode, heightFromRightLastNode)) - heightFromLastNode; j++) {
 
-                            valuesByLevel += defaultSpaces;
+                            valuesByLevel += " ";
                         }
                     } else {
-                        valuesByLevel += defaultSpaces;
+                        valuesByLevel += " ";
                     }
 
                     if (i == midArgsSize) {
-                        valuesByLevel += this->defaultSpaces;
+                        valuesByLevel += defaultSpaces;
                     }
                 }
 
@@ -517,6 +533,7 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
         cout << valuesByLevel << endl;
 
         if (containsNode(children, nodeQuantityByLevel)) {
+
             Node **futureLastNodes = new Node *[nodeQuantityByLevel];
 
             for (int o = 0; o < argsSize; o++) {
@@ -532,7 +549,6 @@ void Tree::showAllTree(int argsSize, Node *root, Node *nodes[], Node *lastNodes[
                     }
                 }
             }
-
             showAllTree(nodeQuantityByLevel, nullptr, children, futureLastNodes);
         }
     }
@@ -542,5 +558,12 @@ Tree::~Tree() {
 
     if (this->root != nullptr) {
         remove(root->getValue(), false);
+    }
+}
+
+void Tree::showRoot() {
+
+    if (this->root != nullptr) {
+        cout << "Root: " << this->root->getValue() << endl;
     }
 }
