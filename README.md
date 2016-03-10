@@ -10,7 +10,7 @@ A simple implementation for Georgy Adelson\-Velsky and Evgenii Landis Tree
 
 Execute the script **run.sh**
 
-OBS: You should have **g++** installed and added in your path
+> OBS: You should have **g++** installed and added in your path
 
 
 # How To Install GCC/G++
