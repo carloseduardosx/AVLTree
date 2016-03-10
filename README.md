@@ -2,12 +2,15 @@
 
 A simple implementation for Georgy Adelson\-Velsky and Evgenii Landis Tree
 
+# Preview
+
+![Sample usage](https://github.com/carloseduardosx/AVLTree/blob/master/img/AVLTree.gif)
 
 # How To Use
 
-Execute the run.sh
+Execute the script **run.sh**
 
-OBS: You should have cpp compilator installed and added in your path
+OBS: You should have **g++** installed and added in your path
 
 
 # How To Install GCC/G++
